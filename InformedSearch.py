@@ -18,11 +18,11 @@ def greedy_best_first(origin, target, name_to_neighbors, straight_distances):
     node = TreeNode(state)
     node.neighbors = name_to_neighbors[origin]
     node.cost = 0
-    frontier = [[straight_distances[origin],node]]
+    frontier = [[straight_distances[origin],origin,node]]
     reached = {origin:node}
     finished = False
     while frontier:
-        node = heappop(frontier)[1]
+        node = heappop(frontier)[2]
         if node.state.initials == target:
             finished = True
             break
@@ -35,7 +35,7 @@ def greedy_best_first(origin, target, name_to_neighbors, straight_distances):
                     reached[neighbor].neighbors = name_to_neighbors[neighbor]
                 reached[neighbor].cost = node.cost + node.neighbors[neighbor]
                 reached[neighbor].parent = node
-                heappush(frontier, [straight_distances[neighbor],reached[neighbor]])
+                heappush(frontier, [straight_distances[neighbor],neighbor,reached[neighbor]])
     timeEnd = timeit.default_timer()
     if not finished:
         return STRING_TO_RETURN.format(algorithm="Greedy Best First Search",path_string="FAILURE: NO PATH FOUND",
@@ -58,11 +58,11 @@ def a_algorithm(origin, target, name_to_neighbors, straight_distances):
     node = TreeNode(state)
     node.neighbors = name_to_neighbors[origin]
     node.cost = 0
-    frontier = [[straight_distances[origin],node]]
+    frontier = [[straight_distances[origin],origin,node]]
     reached = {origin:node}
     finished = False
     while frontier:
-        node = heappop(frontier)[1]
+        node = heappop(frontier)[2]
         if node.state.initials == target:
             finished = True
             break
@@ -75,7 +75,7 @@ def a_algorithm(origin, target, name_to_neighbors, straight_distances):
                     reached[neighbor].neighbors = name_to_neighbors[neighbor]
                 reached[neighbor].cost = node.cost + node.neighbors[neighbor]
                 reached[neighbor].parent = node
-                heappush(frontier, [straight_distances[neighbor]+node.neighbors[neighbor],reached[neighbor]])
+                heappush(frontier, [reached[neighbor].cost+straight_distances[neighbor],neighbor,reached[neighbor]])
     timeEnd = timeit.default_timer()
     if not finished:
         return STRING_TO_RETURN.format(algorithm="A* Search",path_string="FAILURE: NO PATH FOUND",
